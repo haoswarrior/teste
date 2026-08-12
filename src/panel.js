@@ -72,7 +72,7 @@ export function drawPanel(canvas, { gap, paletas, reveal = 1, detail = true, fai
     pts.push({ x: baseX(j), y: fringeTop });
     // Durante a amarração as marcas de torção saem: são o custo do frame, e
     // ninguém as vê num quadro em movimento. Voltam no desenho final.
-    cord(ctx, pts, cw, pal(j), { twist: detail });
+    cord(ctx, pts, cw, pal(j), { twist: detail, detail });
   }
 
   // Os nós por cima, já que o nó cobre as cordas que entram nele.
