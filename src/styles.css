@@ -372,6 +372,19 @@ a {
   opacity: 0.6;
 }
 
+/* Marca o que ainda é provisório, para ninguém confundir com dado real da
+   Vall. Some quando o conteúdo verdadeiro entrar. */
+[data-contato] {
+  outline: 1px dashed color-mix(in srgb, var(--barro) 55%, transparent);
+  outline-offset: 3px;
+}
+
+.placeholder-note {
+  margin-top: 0.75rem;
+  color: var(--barro);
+  opacity: 1;
+}
+
 .colophon {
   padding: 2.5rem var(--gutter) 3.5rem;
   border-top: 1px solid color-mix(in srgb, var(--tinta) 14%, transparent);
