@@ -1,19 +1,23 @@
 :root {
-  /* Paleta boho com a estrutura de valor invertida: o fundo é nogueira, e o
-     algodão cru é que carrega a luz — como uma peça numa parede escura. */
-  --noz: #241811;
-  --casca: #32241a;
-  --algodao: #ebdfc8;
-  --barro: #c2562c;
-  --ocre: #d9992b;
-  --salvia: #6f7a53;
+  /* Boho tradicional: parede de linho, corda de algodão cru e madeira. A corda
+     aparece pela sombra que projeta, não por contraste de cor — que é como uma
+     peça se lê numa parede clara. */
+  --parede: #efe7d9;
+  --superficie: #e5dac7;
+  --tinta: #2e241c;
+  --barro: #b8502a;
+  --ocre: #835810;
+  --salvia: #64724e;
 
   /* Tokens da corda, lidos pelo canvas em main.js. */
-  --corda: #ddcdae;
-  --corda-luz: #fbf3e2;
-  --corda-sombra: #150e09;
-  --madeira: #7a5230;
-  --madeira-veio: #3d2716;
+  --corda: #e9dbc1;
+  --corda-luz: #fdf8ee;
+  --corda-sombra: #a28f70;
+  --madeira: #8a5a30;
+  --madeira-veio: #573719;
+
+  /* O botão tem fundo barro, então a tinta dele é clara e não a da página. */
+  --cta-tinta: #fdf8ee;
 
   --gutter: clamp(1.25rem, 5vw, 5rem);
   --measure: 34rem;
@@ -26,8 +30,8 @@
 }
 
 body {
-  background: var(--noz);
-  color: var(--algodao);
+  background: var(--parede);
+  color: var(--tinta);
   font-family: "Karla Variable", system-ui, sans-serif;
   font-size: clamp(1rem, 1.05vw, 1.0625rem);
   line-height: 1.65;
@@ -71,7 +75,7 @@ a {
   justify-content: space-between;
   gap: 1rem;
   padding: 1.15rem var(--gutter);
-  background: linear-gradient(var(--noz) 55%, transparent);
+  background: linear-gradient(var(--parede) 55%, transparent);
 }
 
 .brand {
@@ -103,7 +107,7 @@ a {
 
 .brand-cta {
   padding: 0.45rem 0.95rem;
-  border: 1px solid color-mix(in srgb, var(--algodao) 35%, transparent);
+  border: 1px solid color-mix(in srgb, var(--tinta) 35%, transparent);
   border-radius: 999px;
   opacity: 1;
 }
@@ -165,7 +169,7 @@ a {
   margin-top: 0.35rem;
   padding: 0.85rem 1.6rem;
   background: var(--barro);
-  color: var(--algodao);
+  color: var(--cta-tinta);
   font-weight: 600;
   letter-spacing: 0.02em;
   text-decoration: none;
@@ -177,7 +181,7 @@ a {
 
 .cta:hover {
   background: var(--ocre);
-  color: var(--noz);
+  color: var(--parede);
   transform: translateY(-2px);
 }
 
@@ -225,7 +229,7 @@ a {
   flex-direction: column;
   gap: 0.7rem;
   padding: 1.5rem;
-  background: var(--casca);
+  background: var(--superficie);
   border-radius: 4px;
 }
 
@@ -263,7 +267,7 @@ a {
   align-items: start;
   align-content: start;
   padding-top: clamp(1.5rem, 3vw, 2.5rem);
-  border-top: 1px solid color-mix(in srgb, var(--algodao) 18%, transparent);
+  border-top: 1px solid color-mix(in srgb, var(--tinta) 18%, transparent);
 }
 
 /* A amostra sai da ficha ao lado: mesma malha do topo, parâmetros da peça. */
@@ -302,7 +306,7 @@ a {
   font-size: 0.7rem;
   letter-spacing: 0.16em;
   text-transform: uppercase;
-  opacity: 0.55;
+  opacity: 0.72;
   margin-bottom: 0.15rem;
 }
 
@@ -327,7 +331,7 @@ a {
 .rule-of-thumb {
   margin-top: 0.75rem;
   padding: 1.5rem 1.75rem;
-  background: var(--casca);
+  background: var(--superficie);
   border-left: 3px solid var(--barro);
   border-radius: 3px;
   opacity: 1;
@@ -370,9 +374,9 @@ a {
 
 .colophon {
   padding: 2.5rem var(--gutter) 3.5rem;
-  border-top: 1px solid color-mix(in srgb, var(--algodao) 14%, transparent);
+  border-top: 1px solid color-mix(in srgb, var(--tinta) 14%, transparent);
   font-size: 0.8rem;
-  opacity: 0.45;
+  opacity: 0.62;
   max-width: 40rem;
 }
 

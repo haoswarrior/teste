@@ -15,16 +15,21 @@ const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").match
 
 // A paleta da corda sai das mesmas custom properties do CSS: um só lugar
 // define a cor, e o canvas e a folha de estilo leem dali.
-const css = getComputedStyle(document.documentElement);
-const token = (name) => css.getPropertyValue(name).trim();
+const palette = {};
 
-const palette = {
-  body: token("--corda"),
-  light: token("--corda-luz"),
-  shadow: token("--corda-sombra"),
-  wood: token("--madeira"),
-  woodGrain: token("--madeira-veio"),
-};
+/** Relê os tokens a cada repintura, para uma troca de paleta valer no canvas. */
+function readPalette() {
+  const css = getComputedStyle(document.documentElement);
+  const token = (name) => css.getPropertyValue(name).trim();
+  Object.assign(palette, {
+    body: token("--corda"),
+    light: token("--corda-luz"),
+    shadow: token("--corda-sombra"),
+    wood: token("--madeira"),
+    woodGrain: token("--madeira-veio"),
+  });
+}
+readPalette();
 
 const panel = document.querySelector("#painel");
 const heroText = document.querySelector("#hero-text");
@@ -124,6 +129,7 @@ let resizeTimer;
 window.addEventListener("resize", () => {
   clearTimeout(resizeTimer);
   resizeTimer = setTimeout(() => {
+    readPalette();
     paintPanel();
     paintKnots();
     paintSwatches();
