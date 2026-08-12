@@ -7,7 +7,7 @@ import { cord } from "./cord.js";
  * A corda é uma polilinha explícita, e os nós são posicionados amostrando essa
  * mesma polilinha — senão eles flutuam acima da curva desenhada.
  */
-export function drawDivider(canvas, { palette, progress = 1 } = {}) {
+export function drawDivider(canvas, { paletas, progress = 1 } = {}) {
   const ctx = canvas.getContext("2d");
   const dpr = Math.min(window.devicePixelRatio || 1, 2);
   const w = canvas.clientWidth;
@@ -30,7 +30,7 @@ export function drawDivider(canvas, { palette, progress = 1 } = {}) {
     const u = i / samples;
     rope.push({ x: u * w, y: cy - sag + 4 * sag * u * (1 - u) });
   }
-  cord(ctx, rope, cw, palette);
+  cord(ctx, rope, cw, paletas[0]);
 
   const knots = Math.max(3, Math.round(w / 190));
   const step = w / (knots + 1);
@@ -43,7 +43,8 @@ export function drawDivider(canvas, { palette, progress = 1 } = {}) {
     const y = cy - sag + 4 * sag * u * (1 - u);
     // Tangente da corda, para a volta cruzar ela de through e não na diagonal.
     const slope = (4 * sag * (1 - 2 * u)) / w;
-    tie(ctx, x, y, slope, cw, palette, t);
+    // Cada nó da fileira leva um fio diferente, como numa peça multicolor.
+    tie(ctx, x, y, slope, cw, paletas[(i + 1) % paletas.length], t);
   }
 }
 

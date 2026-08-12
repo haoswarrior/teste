@@ -7,6 +7,8 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { drawPanel } from "./panel.js";
 import { drawDivider } from "./divider.js";
 import { drawSwatch } from "./swatch.js";
+import { drawNo } from "./no.js";
+import { combinacao, nomesDe } from "./cores.js";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -14,22 +16,22 @@ const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").match
 
 // A paleta da corda sai das mesmas custom properties do CSS: um só lugar
 // define a cor, e o canvas e a folha de estilo leem dali.
-const palette = {};
+const base = {};
 
-/** Relê os tokens a cada repintura, para uma troca de paleta valer no canvas. */
+/** Relê os tokens a cada repintura: madeira e barro saem do CSS. */
 function readPalette() {
   const css = getComputedStyle(document.documentElement);
   const token = (name) => css.getPropertyValue(name).trim();
-  Object.assign(palette, {
-    body: token("--corda"),
-    light: token("--corda-luz"),
-    shadow: token("--corda-sombra"),
+  Object.assign(base, {
     wood: token("--madeira"),
     woodGrain: token("--madeira-veio"),
     accent: token("--barro"),
   });
 }
 readPalette();
+
+/** A combinação de fios do topo: cru com barro, mostarda e oliva. */
+const paletasTopo = () => combinacao(["cru", "barro", "cru", "mostarda", "oliva"], base);
 
 const panel = document.querySelector("#painel");
 const heroText = document.querySelector("#hero-text");
@@ -49,7 +51,7 @@ function gap() {
 const state = { reveal: reduceMotion ? 1 : 0 };
 
 function paintPanel(detail = true) {
-  drawPanel(panel, { gap: gap(), palette, reveal: state.reveal, detail });
+  drawPanel(panel, { gap: gap(), paletas: paletasTopo(), reveal: state.reveal, detail });
 }
 
 paintPanel();
@@ -84,7 +86,7 @@ if (!reduceMotion) {
 // --- As transições entre seções -------------------------------------------
 document.querySelectorAll(".divider").forEach((canvas) => {
   const st = { progress: reduceMotion ? 1 : 0 };
-  const paint = () => drawDivider(canvas, { palette, progress: st.progress });
+  const paint = () => drawDivider(canvas, { paletas: paletasTopo(), progress: st.progress });
   paint();
 
   if (reduceMotion) return;
@@ -125,10 +127,19 @@ if (WHATSAPP) {
 
 // --- As amostras das peças -------------------------------------------------
 const swatches = [...document.querySelectorAll(".swatch")];
+
+// A combinação de fios é declarada uma vez por peça: ela desenha a amostra e
+// preenche a linha "Fios" da ficha. Um lugar só define a cor da peça.
+swatches.forEach((c) => {
+  const chaves = (c.dataset.cores || "cru").split(",");
+  const ficha = c.closest(".piece")?.querySelector("[data-fios]");
+  if (ficha) ficha.textContent = nomesDe(chaves);
+});
+
 const paintSwatches = () =>
   swatches.forEach((c) =>
     drawSwatch(c, {
-      palette,
+      paletas: combinacao((c.dataset.cores || "cru").split(","), base),
       forma: c.dataset.forma,
       rows: Number(c.dataset.rows) || undefined,
       openFrom: Number(c.dataset.open) || undefined,
@@ -136,6 +147,25 @@ const paintSwatches = () =>
     }),
   );
 paintSwatches();
+
+// --- O nó grande, dando e desfazendo ---------------------------------------
+const noCanvas = document.querySelector("#no");
+const noPaletas = () => combinacao(["barro", "cru", "oliva"], base);
+const noEstado = { t: 1 };
+const paintNo = () => drawNo(noCanvas, { paletas: noPaletas(), t: noEstado.t });
+paintNo();
+
+if (!reduceMotion) {
+  gsap.to(noEstado, {
+    t: 0.06,
+    duration: 2.4,
+    ease: "power2.inOut",
+    repeat: -1,
+    yoyo: true,
+    repeatDelay: 1.1,
+    onUpdate: paintNo,
+  });
+}
 
 // Não há entrada de seção nem fade em card: o único movimento desta página é
 // nó sendo dado — no topo e nas transições. Qualquer outra animação diluiria
@@ -149,9 +179,10 @@ window.addEventListener("resize", () => {
     readPalette();
     paintPanel();
     paintSwatches();
+    paintNo();
     document
       .querySelectorAll(".divider")
-      .forEach((c) => drawDivider(c, { palette, progress: 1 }));
+      .forEach((c) => drawDivider(c, { paletas: paletasTopo(), progress: 1 }));
     ScrollTrigger.refresh();
   }, 120);
 });

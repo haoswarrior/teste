@@ -4,10 +4,13 @@ import { cord, fray, seeded } from "./cord.js";
  * A amostra de cada peça, gerada da ficha técnica dela.
  *
  * Não é foto: é a mesma malha de nó quadrado alternado do topo, montada na
- * forma que a peça tem. A forma importa — desenhar um painel ao lado da
- * palavra "bolsa" seria a página mentindo sobre o produto.
+ * forma que a peça tem e nas cores de fio que ela usa. Forma e cor vêm da
+ * ficha ao lado — mudou a ficha, muda o desenho.
  */
-export function drawSwatch(canvas, { palette, forma = "painel", rows = 5, openFrom = 99, arc = 0 } = {}) {
+export function drawSwatch(
+  canvas,
+  { paletas, forma = "painel", rows = 5, openFrom = 99, arc = 0 } = {},
+) {
   const ctx = canvas.getContext("2d");
   const dpr = Math.min(window.devicePixelRatio || 1, 2);
   const w = canvas.clientWidth;
@@ -19,50 +22,20 @@ export function drawSwatch(canvas, { palette, forma = "painel", rows = 5, openFr
   ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
   ctx.clearRect(0, 0, w, h);
 
-  const ctxo = { ctx, w, h, palette, rand: seeded(4711) };
-  if (forma === "bolsa") return bolsa(ctxo);
-  if (forma === "vaso") return vaso(ctxo);
-  return painel(ctxo, { rows, openFrom, arc, cortina: forma === "cortina" });
-}
-
-/** A malha de nó quadrado alternado, comum a todas as formas. */
-function malha(ctx, { count, baseX, rowY, rows, spacing, cw, palette, twist = false }) {
-  const pairOf = (j, r) => {
-    const off = r % 2;
-    const idx = j - off;
-    if (idx < 0) return null;
-    const a = off + Math.floor(idx / 2) * 2;
-    if (a + 1 >= count) return null;
-    return { a, cx: (baseX(a) + baseX(a + 1)) / 2 };
-  };
-
-  for (let r = 0; r < rows; r += 1) {
-    for (let j = r % 2; j + 1 < count; j += 2) {
-      const p = pairOf(j, r);
-      if (!p || p.a !== j) continue;
-      cord(
-        ctx,
-        [
-          { x: p.cx - spacing * 0.28, y: rowY(r) },
-          { x: p.cx, y: rowY(r) + cw * 0.12 },
-          { x: p.cx + spacing * 0.28, y: rowY(r) },
-        ],
-        cw * 1.3,
-        palette,
-        { twist },
-      );
-    }
-  }
-  return pairOf;
+  const o = { ctx, w, h, paletas, rand: seeded(4711) };
+  if (forma === "bolsa") return bolsa(o);
+  if (forma === "vaso") return vaso(o);
+  return painel(o, { rows, openFrom, arc, cortina: forma === "cortina" });
 }
 
 /** Painel de parede e cortina: bastão em cima, trama, franja embaixo. */
-function painel({ ctx, w, h, palette, rand }, { rows, openFrom, arc, cortina }) {
+function painel({ ctx, w, h, paletas, rand }, { rows, openFrom, arc, cortina }) {
   const count = 8;
   const spacing = w / (count + 0.6);
   const cw = spacing * 0.3;
   const x0 = (w - (count - 1) * spacing) / 2;
   const baseX = (j) => x0 + j * spacing;
+  const pal = (j) => paletas[Math.floor(j / 2) % paletas.length];
 
   const barY = Math.max(9, h * 0.045);
   const rowH = spacing * 1.12;
@@ -79,7 +52,7 @@ function painel({ ctx, w, h, palette, rand }, { rows, openFrom, arc, cortina }) 
     return lastRow + spacing * (cortina ? 0.5 : 0.9) + arc * (1 - t * t);
   };
 
-  bastao(ctx, w, barY, cw, palette);
+  bastao(ctx, w, barY, cw, paletas[0]);
 
   const pairOf = (j, r) => {
     const off = r % 2;
@@ -87,7 +60,7 @@ function painel({ ctx, w, h, palette, rand }, { rows, openFrom, arc, cortina }) 
     if (idx < 0) return null;
     const a = off + Math.floor(idx / 2) * 2;
     if (a + 1 >= count) return null;
-    return { cx: (baseX(a) + baseX(a + 1)) / 2 };
+    return { a, cx: (baseX(a) + baseX(a + 1)) / 2 };
   };
 
   for (let j = 0; j < count; j += 1) {
@@ -97,21 +70,27 @@ function painel({ ctx, w, h, palette, rand }, { rows, openFrom, arc, cortina }) 
       pts.push({ x: p ? p.cx : baseX(j), y: rowY(r) });
     }
     pts.push({ x: baseX(j), y: hem(j) });
-    cord(ctx, pts, cw, palette, { twist: false });
+    cord(ctx, pts, cw, pal(j), { twist: false });
   }
 
-  malha(ctx, { count, baseX, rowY, rows, spacing, cw, palette });
+  for (let r = 0; r < rows; r += 1) {
+    for (let j = r % 2; j + 1 < count; j += 2) {
+      const p = pairOf(j, r);
+      if (p && p.a === j) colar(ctx, p.cx, rowY(r), spacing * 0.28, cw, pal(j));
+    }
+  }
 
-  for (let j = 0; j < count; j += 1) fray(ctx, baseX(j), hem(j), h - 4, cw, palette, rand);
+  for (let j = 0; j < count; j += 1) fray(ctx, baseX(j), hem(j), h - 4, cw, pal(j), rand);
 }
 
 /** Bolsa: alça em arco, corpo em trama fechada, franja curta na base. */
-function bolsa({ ctx, w, h, palette, rand }) {
+function bolsa({ ctx, w, h, paletas, rand }) {
   const count = 7;
   const spacing = (w * 0.78) / (count - 1);
   const cw = spacing * 0.3;
   const x0 = (w - (count - 1) * spacing) / 2;
   const baseX = (j) => x0 + j * spacing;
+  const pal = (j) => paletas[Math.floor(j / 2) % paletas.length];
 
   const strapTop = h * 0.06;
   const mouth = h * 0.42;
@@ -130,11 +109,10 @@ function bolsa({ ctx, w, h, palette, rand }) {
       { x: baseX(count - 1), y: mouth },
     ],
     cw * 1.15,
-    palette,
+    paletas[0],
     { twist: false },
   );
 
-  // A boca da bolsa, onde as cordas do corpo são montadas.
   cord(
     ctx,
     [
@@ -142,7 +120,7 @@ function bolsa({ ctx, w, h, palette, rand }) {
       { x: baseX(count - 1) + cw, y: mouth },
     ],
     cw * 1.25,
-    palette,
+    paletas[0],
     { twist: false },
   );
 
@@ -152,7 +130,7 @@ function bolsa({ ctx, w, h, palette, rand }) {
     if (idx < 0) return null;
     const a = off + Math.floor(idx / 2) * 2;
     if (a + 1 >= count) return null;
-    return { cx: (baseX(a) + baseX(a + 1)) / 2 };
+    return { a, cx: (baseX(a) + baseX(a + 1)) / 2 };
   };
 
   const fundo = rowY(rows - 1) + rowH * 0.7;
@@ -163,12 +141,16 @@ function bolsa({ ctx, w, h, palette, rand }) {
       pts.push({ x: p ? p.cx : baseX(j), y: rowY(r) });
     }
     pts.push({ x: baseX(j), y: fundo });
-    cord(ctx, pts, cw, palette, { twist: false });
+    cord(ctx, pts, cw, pal(j), { twist: false });
   }
 
-  malha(ctx, { count, baseX, rowY, rows, spacing, cw, palette });
+  for (let r = 0; r < rows; r += 1) {
+    for (let j = r % 2; j + 1 < count; j += 2) {
+      const p = pairOf(j, r);
+      if (p && p.a === j) colar(ctx, p.cx, rowY(r), spacing * 0.28, cw, pal(j));
+    }
+  }
 
-  // O fundo fechado, e a franja curta que sobra dele.
   cord(
     ctx,
     [
@@ -177,25 +159,27 @@ function bolsa({ ctx, w, h, palette, rand }) {
       { x: baseX(count - 1) + cw * 0.5, y: fundo },
     ],
     cw * 1.35,
-    palette,
+    paletas[0],
     { twist: false },
   );
   for (let j = 0; j < count; j += 1) {
-    fray(ctx, baseX(j), fundo + cw * 0.4, Math.min(h - 4, fundo + h * 0.14), cw, palette, rand);
+    fray(ctx, baseX(j), fundo + cw * 0.4, Math.min(h - 4, fundo + h * 0.14), cw, pal(j), rand);
   }
 }
 
 /** Suporte para vaso: argola em cima, coluna de nós, berço e borla. */
-function vaso({ ctx, w, h, palette, rand }) {
+function vaso({ ctx, w, h, paletas, rand }) {
   const cx = w / 2;
   const cw = w * 0.045;
   const ringY = h * 0.08;
   const ringR = w * 0.09;
+  const p0 = paletas[0];
+  const p1 = paletas[1] || paletas[0];
 
   ctx.save();
   ctx.beginPath();
   ctx.arc(cx, ringY, ringR, 0, Math.PI * 2);
-  ctx.strokeStyle = palette.wood;
+  ctx.strokeStyle = p0.wood;
   ctx.lineWidth = cw * 1.1;
   ctx.stroke();
   ctx.restore();
@@ -206,7 +190,7 @@ function vaso({ ctx, w, h, palette, rand }) {
   const base = h * 0.74;
   const braco = w * 0.3;
 
-  // Quatro braços: descem juntos, abrem no berço e voltam a se juntar embaixo.
+  let k = 0;
   for (const s of [-1, 1]) {
     for (const inner of [0.45, 1]) {
       const dx = braco * inner * s;
@@ -220,26 +204,15 @@ function vaso({ ctx, w, h, palette, rand }) {
           { x: cx, y: base + cw * 1.2 },
         ],
         cw,
-        palette,
+        paletas[k++ % paletas.length],
         { twist: false },
       );
     }
   }
 
-  // A coluna de nó quadrado logo abaixo da argola.
   for (let i = 0; i < 3; i += 1) {
     const y = colTop + ((colBottom - colTop) * (i + 0.5)) / 3;
-    cord(
-      ctx,
-      [
-        { x: cx - w * 0.075, y },
-        { x: cx, y: y + cw * 0.15 },
-        { x: cx + w * 0.075, y },
-      ],
-      cw * 1.35,
-      palette,
-      { twist: false },
-    );
+    colar(ctx, cx, y, w * 0.075, cw, p0);
   }
 
   // O vaso que o berço segura.
@@ -250,42 +223,34 @@ function vaso({ ctx, w, h, palette, rand }) {
   ctx.lineTo(cx + braco * 0.5, base - cw);
   ctx.lineTo(cx - braco * 0.5, base - cw);
   ctx.closePath();
-  ctx.fillStyle = palette.accent;
-  ctx.globalAlpha = 0.85;
+  ctx.fillStyle = p0.accent;
+  ctx.globalAlpha = 0.9;
   ctx.fill();
   ctx.restore();
 
-  // Os nós do berço, que cruzam por cima do vaso e o seguram.
   for (const s of [-1, 1]) {
-    const y = berco - h * 0.01;
-    cord(
-      ctx,
-      [
-        { x: cx + s * braco * 0.28, y },
-        { x: cx + s * braco * 0.55, y: y + cw * 0.4 },
-        { x: cx + s * braco * 0.82, y },
-      ],
-      cw * 1.2,
-      palette,
-      { twist: false },
-    );
+    colar(ctx, cx + s * braco * 0.55, berco - h * 0.01, braco * 0.27, cw, p1);
   }
 
-  // A borla embaixo, onde os quatro braços se encontram.
+  colar(ctx, cx, base + cw * 1.35, w * 0.06, cw * 1.15, p0);
+  for (let i = -2; i <= 2; i += 1) {
+    fray(ctx, cx + i * cw * 1.1, base + cw * 1.8, h - 4, cw * 0.95, paletas[(i + 2) % paletas.length], rand);
+  }
+}
+
+/** O colar que fecha o nó: um arco curto e mais grosso que a corda. */
+function colar(ctx, cx, cy, half, cw, palette) {
   cord(
     ctx,
     [
-      { x: cx - w * 0.06, y: base + cw * 1.2 },
-      { x: cx, y: base + cw * 1.6 },
-      { x: cx + w * 0.06, y: base + cw * 1.2 },
+      { x: cx - half, y: cy },
+      { x: cx, y: cy + cw * 0.12 },
+      { x: cx + half, y: cy },
     ],
-    cw * 1.5,
+    cw * 1.3,
     palette,
     { twist: false },
   );
-  for (let i = -2; i <= 2; i += 1) {
-    fray(ctx, cx + i * cw * 1.1, base + cw * 1.8, h - 4, cw * 0.95, palette, rand);
-  }
 }
 
 function bastao(ctx, w, y, cw, palette) {

@@ -51,7 +51,7 @@
 
         <ul class="piece-list">
           <li class="piece">
-            <canvas class="swatch" data-forma="painel" data-rows="6" data-open="4" data-arc="0" aria-hidden="true"></canvas>
+            <canvas class="swatch" data-forma="painel" data-cores="cru,barro,mostarda,oliva" data-rows="6" data-open="4" data-arc="0" aria-hidden="true"></canvas>
             <h3>Painel de parede</h3>
             <p>
               O carro-chefe. Trama fechada em cima e aberta embaixo, para a
@@ -62,13 +62,14 @@
               <div><dt>Medidas</dt><dd>60 a 140 cm de largura</dd></div>
               <div><dt>Corda</dt><dd>algodão cru 4 mm, torcido</dd></div>
               <div><dt>Bastão</dt><dd>madeira ou bambu</dd></div>
+              <div><dt>Fios</dt><dd data-fios></dd></div>
               <div><dt>Prazo</dt><dd>2 a 3 semanas</dd></div>
               <div><dt>Preço</dt><dd>sob consulta</dd></div>
             </dl>
           </li>
 
           <li class="piece">
-            <canvas class="swatch" data-forma="bolsa" aria-hidden="true"></canvas>
+            <canvas class="swatch" data-forma="bolsa" data-cores="petroleo,cru,vinho" aria-hidden="true"></canvas>
             <h3>Bolsa</h3>
             <p>
               Corpo em nó quadrado fechado e alça inteiriça, sem emenda. Forro
@@ -78,6 +79,7 @@
             <dl class="spec">
               <div><dt>Medida</dt><dd>30 × 35 cm</dd></div>
               <div><dt>Alça</dt><dd>60 cm, a combinar</dd></div>
+              <div><dt>Fios</dt><dd data-fios></dd></div>
               <div><dt>Corda</dt><dd>algodão cru 3 mm, torcido</dd></div>
               <div><dt>Prazo</dt><dd>1 semana</dd></div>
               <div><dt>Preço</dt><dd>sob consulta</dd></div>
@@ -85,7 +87,7 @@
           </li>
 
           <li class="piece">
-            <canvas class="swatch" data-forma="vaso" aria-hidden="true"></canvas>
+            <canvas class="swatch" data-forma="vaso" data-cores="salvia,cru,mostarda" aria-hidden="true"></canvas>
             <h3>Suporte para vaso</h3>
             <p>
               O que mais sai, e o que mais vira presente. Argola de madeira,
@@ -95,6 +97,7 @@
             <dl class="spec">
               <div><dt>Comprimento</dt><dd>90 cm com a argola</dd></div>
               <div><dt>Vaso</dt><dd>até 18 cm de diâmetro</dd></div>
+              <div><dt>Fios</dt><dd data-fios></dd></div>
               <div><dt>Corda</dt><dd>algodão cru 4 mm, torcido</dd></div>
               <div><dt>Prazo</dt><dd>4 dias</dd></div>
               <div><dt>Preço</dt><dd>sob consulta</dd></div>
@@ -102,7 +105,7 @@
           </li>
 
           <li class="piece">
-            <canvas class="swatch" data-forma="cortina" data-rows="2" data-open="1" data-arc="0" aria-hidden="true"></canvas>
+            <canvas class="swatch" data-forma="cortina" data-cores="cru,rosa,indigo" data-rows="2" data-open="1" data-arc="0" aria-hidden="true"></canvas>
             <h3>Cortina e divisória</h3>
             <p>
               Poucos nós em cima e franja longa até embaixo. Filtra a luz sem
@@ -113,6 +116,7 @@
               <div><dt>Medidas</dt><dd>até 240 × 200 cm</dd></div>
               <div><dt>Corda</dt><dd>algodão cru 4 ou 5 mm</dd></div>
               <div><dt>Bastão</dt><dd>sob medida do vão</dd></div>
+              <div><dt>Fios</dt><dd data-fios></dd></div>
               <div><dt>Prazo</dt><dd>4 a 6 semanas</dd></div>
               <div><dt>Preço</dt><dd>sob consulta</dd></div>
             </dl>
@@ -123,8 +127,16 @@
 
       <section class="material" id="algodao">
         <div class="section-head">
-          <h2>Por que algodão cru</h2>
+          <h2>O fio e o nó</h2>
         </div>
+        <figure class="no-vivo">
+          <canvas id="no" aria-hidden="true"></canvas>
+          <figcaption>
+            Nó quadrado, de perto: as duas de fora trabalham, as duas do meio
+            ficam paradas. Repare na torção &mdash; é algodão de três fios, e é
+            ela que deixa a franja abrir quando passa a escova.
+          </figcaption>
+        </figure>
         <div class="material-body">
           <p>
             A Vall trabalha só com algodão torcido de três fios, sem tingimento.

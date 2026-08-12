@@ -10,7 +10,7 @@ import { cord, fray, seeded } from "./cord.js";
  * bastão, com espaço entre elas. Nenhuma corda atravessa o vão, porque nenhuma
  * corda atravessaria 40 cm de lado numa peça real.
  */
-export function drawPanel(canvas, { gap, palette, reveal = 1, detail = true } = {}) {
+export function drawPanel(canvas, { gap, paletas, reveal = 1, detail = true, faixa = 3 } = {}) {
   const ctx = canvas.getContext("2d");
   const dpr = Math.min(window.devicePixelRatio || 1, 2);
   const w = canvas.clientWidth;
@@ -23,6 +23,9 @@ export function drawPanel(canvas, { gap, palette, reveal = 1, detail = true } = 
   ctx.clearRect(0, 0, w, h);
 
   const rand = seeded(20260812);
+  // A cor anda em faixas verticais, que é como um painel multicolor é montado:
+  // o fio muda a cada punhado de cordas, não a cada corda.
+  const pal = (j) => paletas[Math.floor(j / faixa) % paletas.length];
 
   const spacing = w < 700 ? 24 : Math.min(44, Math.max(30, w / 36));
   const cw = spacing * 0.3;
@@ -69,7 +72,7 @@ export function drawPanel(canvas, { gap, palette, reveal = 1, detail = true } = 
     pts.push({ x: baseX(j), y: fringeTop });
     // Durante a amarração as marcas de torção saem: são o custo do frame, e
     // ninguém as vê num quadro em movimento. Voltam no desenho final.
-    cord(ctx, pts, cw, palette, { twist: detail });
+    cord(ctx, pts, cw, pal(j), { twist: detail });
   }
 
   // Os nós por cima, já que o nó cobre as cordas que entram nele.
@@ -77,16 +80,16 @@ export function drawPanel(canvas, { gap, palette, reveal = 1, detail = true } = 
     for (let j = r % 2; j + 1 < count; j += 2) {
       const pair = partner(j, r);
       if (!pair || pair.a !== j) continue;
-      square(ctx, pair.cx, rowY(r), spacing, cw, palette);
+      square(ctx, pair.cx, rowY(r), spacing, cw, pal(pair.a));
     }
   }
 
   for (let j = 0; j < count; j += 1) {
-    if (present(j)) fray(ctx, baseX(j), fringeTop, h - 6, cw, palette, rand);
+    if (present(j)) fray(ctx, baseX(j), fringeTop, h - 6, cw, pal(j), rand);
   }
   ctx.restore();
 
-  dowel(ctx, w, dowelY, spacing, palette);
+  dowel(ctx, w, dowelY, spacing, paletas[0]);
 }
 
 /** O nó quadrado visto de frente: um colar horizontal sobre as duas cordas. */

@@ -6,6 +6,33 @@
  * marcas diagonais da torção por cima. Sem as marcas, vira linha de desenho.
  */
 
+const hex = (c) => {
+  const n = parseInt(c.replace("#", ""), 16);
+  return [(n >> 16) & 255, (n >> 8) & 255, n & 255];
+};
+const mix = (a, b, t) =>
+  `rgb(${a.map((v, i) => Math.round(v + (b[i] - v) * t)).join(",")})`;
+
+/**
+ * Deriva a paleta de uma corda a partir da cor dela.
+ *
+ * Fio tingido não é fio cru pintado por cima: o brilho de um fio escuro é
+ * menos claro que o de um fio claro, e a sombra é mais profunda. Por isso a
+ * mistura é proporcional à luminância, e não fixa.
+ */
+export function cordPalette(base, { wood, woodGrain, accent } = {}) {
+  const rgb = hex(base);
+  const lum = (0.2126 * rgb[0] + 0.7152 * rgb[1] + 0.0722 * rgb[2]) / 255;
+  return {
+    body: base,
+    light: mix(rgb, [255, 250, 240], 0.2 + 0.28 * lum),
+    shadow: mix(rgb, [26, 16, 10], 0.34 + 0.26 * (1 - lum)),
+    wood,
+    woodGrain,
+    accent,
+  };
+}
+
 /** Traça a polilinha suavizada por pontos médios, sem cantos vivos. */
 function trace(ctx, pts) {
   ctx.beginPath();
@@ -66,11 +93,13 @@ function twistMarks(ctx, pts, w, palette) {
   ctx.clip("nonzero");
 
   ctx.strokeStyle = palette.shadow;
-  ctx.globalAlpha = 0.42;
-  ctx.lineWidth = Math.max(0.7, w * 0.11);
+  ctx.globalAlpha = 0.5;
+  ctx.lineWidth = Math.max(0.7, w * 0.15);
   ctx.lineCap = "butt";
 
-  const step = w * 0.62;
+  // Algodão torcido de três fios dá cerca de dois sulcos por diâmetro. Mais
+  // espaçado que isso e a corda vira um cilindro liso na escala grande.
+  const step = w * 0.46;
   for (let i = 0; i < pts.length - 1; i += 1) {
     const a = pts[i];
     const b = pts[i + 1];

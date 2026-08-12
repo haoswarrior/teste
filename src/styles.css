@@ -7,7 +7,15 @@
   --tinta: #2e241c;
   --barro: #b8502a;
   --ocre: #835810;
-  --salvia: #64724e;
+  --salvia: #5c6b45;
+  --petroleo: #2f5a6b;
+  --vinho: #7d3b48;
+
+  /* Fundos de seção: o mesmo linho puxado para cada cor de fio, de leve. Sem
+     isso a página inteira fica num tom só, por mais colorida que a corda seja. */
+  --campo-verde: #e7e6d5;
+  --campo-azul: #dfe6e8;
+  --campo-barro: #f0e1d6;
 
   /* Tokens da corda, lidos pelo canvas em main.js. */
   --corda: #e9dbc1;
@@ -219,6 +227,18 @@ a {
 
 /* --- Peças --------------------------------------------------------------- */
 
+.pieces {
+  background: var(--campo-barro);
+}
+
+.material {
+  background: var(--campo-verde);
+}
+
+.order {
+  background: var(--campo-azul);
+}
+
 .piece-list {
   list-style: none;
   display: flex;
@@ -283,7 +303,41 @@ a {
 
 /* --- Algodão ------------------------------------------------------------- */
 
+.material {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr);
+  column-gap: clamp(1.5rem, 4vw, 4rem);
+  align-items: start;
+}
+
+.material .section-head {
+  grid-column: 1 / -1;
+}
+
+.no-vivo {
+  grid-column: 1;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.no-vivo canvas {
+  display: block;
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  background: var(--superficie);
+  border-radius: 4px;
+}
+
+.no-vivo figcaption {
+  font-size: 0.88rem;
+  opacity: 0.75;
+  max-width: 30rem;
+}
+
 .material-body {
+  grid-column: 2;
   display: flex;
   flex-direction: column;
   gap: 1.25rem;
@@ -398,6 +452,16 @@ span.is-placeholder {
     text-align: left;
     align-items: flex-start;
     padding-bottom: 3rem;
+  }
+
+  .material {
+    grid-template-columns: 1fr;
+    row-gap: 2rem;
+  }
+
+  .no-vivo,
+  .material-body {
+    grid-column: 1;
   }
 
   .piece {
