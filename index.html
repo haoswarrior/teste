@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Scroll World</title>
+    <link
+      rel="icon"
+      href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><circle cx='16' cy='16' r='12' fill='%23d2601a'/></svg>"
+    />
+    <link rel="stylesheet" href="/src/styles.css" />
+  </head>
+  <body>
+    <canvas id="scene"></canvas>
+
+    <main>
+      <section class="panel" data-step="0">
+        <p class="eyebrow">Frontend Design</p>
+        <h1>O stack mais <em>forte</em></h1>
+        <p class="lead">
+          GSAP para o tempo, Three.js para o espaço, scroll para a narrativa.
+          Role a página.
+        </p>
+      </section>
+
+      <section class="panel align-right" data-step="1">
+        <p class="eyebrow">GSAP</p>
+        <h2>Timeline amarrada ao scroll</h2>
+        <p class="lead">
+          O ScrollTrigger vira o relógio da cena: cada pixel rolado avança a
+          mesma timeline que anima câmera, malha e luz.
+        </p>
+      </section>
+
+      <section class="panel" data-step="2">
+        <p class="eyebrow">Three.js</p>
+        <h2>Geometria que responde</h2>
+        <p class="lead">
+          Um icosaedro deformado por ruído, com wireframe por cima. A rotação e
+          a escala vêm do progresso da timeline, não de um loop solto.
+        </p>
+      </section>
+
+      <section class="panel align-right" data-step="3">
+        <p class="eyebrow">Scroll World</p>
+        <h2>Scroll stoppers</h2>
+        <p class="lead">
+          Sem página montada em bloco: a cena, o texto e o fundo são a mesma
+          composição, sincronizados do começo ao fim.
+        </p>
+      </section>
+    </main>
+
+    <div class="progress"><span id="progress-bar"></span></div>
+
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>
