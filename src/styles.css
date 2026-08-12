@@ -215,41 +215,6 @@ a {
   font-size: clamp(2rem, 4.4vw, 3.4rem);
 }
 
-/* --- Os quatro nós ------------------------------------------------------- */
-
-.knot-grid {
-  list-style: none;
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
-  gap: clamp(1.5rem, 3vw, 2.75rem);
-}
-
-.knot {
-  display: flex;
-  flex-direction: column;
-  gap: 0.7rem;
-  padding: 1.5rem;
-  background: var(--superficie);
-  border-radius: 4px;
-}
-
-.knot canvas {
-  display: block;
-  width: 100%;
-  aspect-ratio: 1 / 1.05;
-  margin-bottom: 0.4rem;
-}
-
-.knot h3 {
-  font-size: 1.35rem;
-  font-weight: 700;
-}
-
-.knot p {
-  font-size: 0.92rem;
-  opacity: 0.78;
-}
-
 /* --- Peças --------------------------------------------------------------- */
 
 .piece-list {
@@ -373,10 +338,20 @@ a {
 }
 
 /* Marca o que ainda é provisório, para ninguém confundir com dado real da
-   Vall. Some quando o conteúdo verdadeiro entrar. */
-[data-contato] {
+   Vall. Some sozinho quando o conteúdo verdadeiro entrar. */
+.is-placeholder {
   outline: 1px dashed color-mix(in srgb, var(--barro) 55%, transparent);
   outline-offset: 3px;
+}
+
+a.cta.is-placeholder {
+  background: color-mix(in srgb, var(--barro) 45%, var(--superficie));
+  cursor: not-allowed;
+}
+
+span.is-placeholder {
+  color: var(--barro);
+  opacity: 1;
 }
 
 .placeholder-note {

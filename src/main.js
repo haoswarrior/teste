@@ -6,7 +6,6 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { drawPanel } from "./panel.js";
 import { drawDivider } from "./divider.js";
-import { KNOTS } from "./knots.js";
 import { drawSwatch } from "./swatch.js";
 
 gsap.registerPlugin(ScrollTrigger);
@@ -101,11 +100,27 @@ document.querySelectorAll(".divider").forEach((canvas) => {
   });
 });
 
-// --- Os quatro nós ---------------------------------------------------------
-const knotCanvases = [...document.querySelectorAll("[data-knot]")];
-const paintKnots = () =>
-  knotCanvases.forEach((c) => KNOTS[c.dataset.knot]?.(c, palette));
-paintKnots();
+// --- WhatsApp --------------------------------------------------------------
+// Único lugar a preencher: o número da Vall, só dígitos, com país e DDD.
+// Ex.: "5511987654321". Enquanto estiver vazio, o botão fica marcado como
+// provisório e não leva a lugar nenhum — melhor que um link quebrado.
+const WHATSAPP = "";
+const RECADO = "Oi, Vall! Vim pelo site e queria saber sobre uma peça.";
+
+const zap = document.querySelector("#whatsapp");
+const zapNota = document.querySelector("#whatsapp-nota");
+
+if (WHATSAPP) {
+  zap.href = `https://wa.me/${WHATSAPP}?text=${encodeURIComponent(RECADO)}`;
+  zap.rel = "noopener";
+  zap.target = "_blank";
+} else {
+  zap.setAttribute("aria-disabled", "true");
+  zap.classList.add("is-placeholder");
+  zapNota.classList.add("is-placeholder");
+  zapNota.textContent = "Falta o número do WhatsApp da Vall";
+  zap.addEventListener("click", (e) => e.preventDefault());
+}
 
 // --- As amostras das peças -------------------------------------------------
 const swatches = [...document.querySelectorAll(".swatch")];
@@ -131,7 +146,6 @@ window.addEventListener("resize", () => {
   resizeTimer = setTimeout(() => {
     readPalette();
     paintPanel();
-    paintKnots();
     paintSwatches();
     document
       .querySelectorAll(".divider")
