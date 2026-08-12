@@ -3,55 +3,88 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Scroll World</title>
+    <title>Meia-secção — o perfil de um sino</title>
+    <meta
+      name="description"
+      content="Um sino afinado é uma curva desenhada. A mesma curva desenha a chapa, levanta o molde e gera a peça."
+    />
     <link
       rel="icon"
-      href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><circle cx='16' cy='16' r='12' fill='%23d2601a'/></svg>"
+      href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><path d='M13 6h6v3l3 12 2 4H8l2-4 3-12z' fill='%239a6b34'/></svg>"
     />
-    <link rel="stylesheet" href="/src/styles.css" />
   </head>
   <body>
-    <canvas id="scene"></canvas>
+    <div class="field" aria-hidden="true"></div>
+    <canvas id="stage" aria-hidden="true"></canvas>
+    <svg id="plate" aria-hidden="true"></svg>
+
+    <header class="masthead">
+      <span class="wordmark">Meia&#8209;secção</span>
+      <span class="meta">bronze 78 : 22 &middot; ré<sub>4</sub></span>
+    </header>
 
     <main>
-      <section class="panel" data-step="0">
-        <p class="eyebrow">Frontend Design</p>
-        <h1>O stack mais <em>forte</em></h1>
+      <section class="step" data-step="desenho">
+        <p class="stage-label">Chapa 1 &mdash; o desenho</p>
+        <h1>Um sino afinado é uma curva.</h1>
         <p class="lead">
-          GSAP para o tempo, Three.js para o espaço, scroll para a narrativa.
-          Role a página.
+          A meia-secção é metade do contorno, medida a partir do lábio. Gire
+          essa curva em torno do eixo e você tem a peça. Não são duas coisas
+          parecidas &mdash; são o mesmo array de pontos, lido duas vezes.
         </p>
       </section>
 
-      <section class="panel align-right" data-step="1">
-        <p class="eyebrow">GSAP</p>
-        <h2>Timeline amarrada ao scroll</h2>
+      <section class="step" data-step="molde">
+        <p class="stage-label">Chapa 2 &mdash; o molde</p>
+        <h2>A mesma curva levanta o molde.</h2>
         <p class="lead">
-          O ScrollTrigger vira o relógio da cena: cada pixel rolado avança a
-          mesma timeline que anima câmera, malha e luz.
+          O moldador recorta a curva numa tábua e a faz girar contra o barro. A
+          tábua raspa o negativo do sino: primeiro o macho, o miolo por onde o
+          badalo vai passar, depois a capa por fora. O bronze entra no vazio
+          entre os dois.
         </p>
       </section>
 
-      <section class="panel" data-step="2">
-        <p class="eyebrow">Three.js</p>
-        <h2>Geometria que responde</h2>
+      <section class="step" data-step="fusao">
+        <p class="stage-label">Chapa 3 &mdash; a fusão</p>
+        <h2>Setenta e oito por vinte e dois.</h2>
         <p class="lead">
-          Um icosaedro deformado por ruído, com wireframe por cima. A rotação e
-          a escala vêm do progresso da timeline, não de um loop solto.
+          Cobre e estanho, a 1&nbsp;150&nbsp;°C. Mais estanho e o sino ganha
+          brilho mas racha; menos e ele soa surdo. A liga não é uma escolha de
+          gosto: é a fronteira estreita em que o metal aceita vibrar por muito
+          tempo sem se partir.
         </p>
       </section>
 
-      <section class="panel align-right" data-step="3">
-        <p class="eyebrow">Scroll World</p>
-        <h2>Scroll stoppers</h2>
+      <section class="step" data-step="afinacao">
+        <p class="stage-label">Chapa 4 &mdash; a afinação</p>
+        <h2>Cinco notas no mesmo corpo.</h2>
         <p class="lead">
-          Sem página montada em bloco: a cena, o texto e o fundo são a mesma
-          composição, sincronizados do começo ao fim.
+          O sino sai do molde desafinado. No torno vertical, o afinador tira
+          metal por dentro &mdash; e cada altura governa um parcial diferente.
+          Os anéis acendem na ordem em que o corte é feito: o nominal no
+          cordão, subindo até o hum, no ombro.
+        </p>
+      </section>
+
+      <section class="step" data-step="toque">
+        <p class="stage-label">Chapa 5 &mdash; o toque</p>
+        <h2>A nota que você ouve não está no sino.</h2>
+        <p class="lead">
+          Nenhum dos cinco parciais é a nota do sino. O ouvido recebe os cinco
+          juntos e constrói um sexto som, uma oitava abaixo do nominal, que
+          nenhum microfone encontra no metal. O fundidor passa meses afinando
+          uma nota que só existe em quem escuta.
         </p>
       </section>
     </main>
 
-    <div class="progress"><span id="progress-bar"></span></div>
+    <footer class="colophon">
+      <p>
+        Perfil, molde e peça saem de <code>src/profile.js</code>. Three.js
+        revoluciona a curva, o GSAP conduz o scroll.
+      </p>
+    </footer>
 
     <script type="module" src="/src/main.js"></script>
   </body>
