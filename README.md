@@ -24,6 +24,13 @@ npm run preview  # serve o build
 | `src/main.js`    | ScrollTrigger, timeline única e animações de entrada dos painéis    |
 | `src/styles.css` | Layout dos painéis, tipografia e barra de progresso                 |
 
+## Skill de design
+
+`.claude/skills/frontend-design/` traz a skill oficial `frontend-design` da
+Anthropic ([anthropics/claude-code](https://github.com/anthropics/claude-code/tree/main/plugins/frontend-design)),
+instalada como skill de projeto — ela carrega sozinha em qualquer sessão do
+Claude Code aberta neste repositório, sem precisar instalar o plugin de novo.
+
 ## Notas de implementação
 
 - O `render` do Three.js roda no `gsap.ticker`, então há um único loop de frame
