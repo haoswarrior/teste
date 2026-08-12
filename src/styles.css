@@ -75,7 +75,9 @@ a {
   justify-content: space-between;
   gap: 1rem;
   padding: 1.15rem var(--gutter);
-  background: linear-gradient(var(--parede) 55%, transparent);
+  /* Opaco até bem depois do menu: com o fade começando cedo, o texto que rola
+     por baixo aparecia atrás dos links. */
+  background: linear-gradient(var(--parede) 0 82%, transparent);
 }
 
 .brand {

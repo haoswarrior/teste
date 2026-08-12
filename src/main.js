@@ -26,6 +26,7 @@ function readPalette() {
     shadow: token("--corda-sombra"),
     wood: token("--madeira"),
     woodGrain: token("--madeira-veio"),
+    accent: token("--barro"),
   });
 }
 readPalette();
@@ -118,7 +119,7 @@ if (WHATSAPP) {
   zap.setAttribute("aria-disabled", "true");
   zap.classList.add("is-placeholder");
   zapNota.classList.add("is-placeholder");
-  zapNota.textContent = "Falta o número do WhatsApp da Vall";
+  zapNota.textContent = "WhatsApp a definir";
   zap.addEventListener("click", (e) => e.preventDefault());
 }
 
@@ -128,9 +129,10 @@ const paintSwatches = () =>
   swatches.forEach((c) =>
     drawSwatch(c, {
       palette,
-      rows: Number(c.dataset.rows),
-      openFrom: Number(c.dataset.open),
-      arc: Number(c.dataset.arc),
+      forma: c.dataset.forma,
+      rows: Number(c.dataset.rows) || undefined,
+      openFrom: Number(c.dataset.open) || undefined,
+      arc: Number(c.dataset.arc) || 0,
     }),
   );
 paintSwatches();
