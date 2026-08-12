@@ -3,86 +3,208 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Meia-secção — o perfil de um sino</title>
+    <title>Nó Cru — ateliê de macramé</title>
     <meta
       name="description"
-      content="Um sino afinado é uma curva desenhada. A mesma curva desenha a chapa, levanta o molde e gera a peça."
+      content="Ateliê de macramé em algodão cru. Painéis, divisórias e cortinas sob encomenda, feitos com quatro nós."
     />
     <link
       rel="icon"
-      href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><path d='M13 6h6v3l3 12 2 4H8l2-4 3-12z' fill='%239a6b34'/></svg>"
+      href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' fill='%23241811'/><path d='M8 9h16M11 9v6l5 3 5-3V9M11 24l5-6 5 6' stroke='%23EBDFC8' stroke-width='2.5' fill='none' stroke-linecap='round'/></svg>"
     />
   </head>
   <body>
-    <div class="field" aria-hidden="true"></div>
-    <canvas id="stage" aria-hidden="true"></canvas>
-    <svg id="plate" aria-hidden="true"></svg>
-
     <header class="masthead">
-      <span class="wordmark">Meia&#8209;secção</span>
-      <span class="meta">bronze 78 : 22 &middot; ré<sub>4</sub></span>
+      <a class="brand" href="#topo">Nó&nbsp;Cru</a>
+      <nav>
+        <a href="#nos">Os nós</a>
+        <a href="#pecas">Peças</a>
+        <a href="#algodao">Algodão</a>
+        <a class="brand-cta" href="#encomenda">Encomendar</a>
+      </nav>
     </header>
 
-    <main>
-      <section class="step" data-step="desenho">
-        <p class="stage-label">Chapa 1 &mdash; o desenho</p>
-        <h1>Um sino afinado é uma curva.</h1>
-        <p class="lead">
-          A meia-secção é metade do contorno, medida a partir do lábio. Gire
-          essa curva em torno do eixo e você tem a peça. Não são duas coisas
-          parecidas &mdash; são o mesmo array de pontos, lido duas vezes.
-        </p>
+    <main id="topo">
+      <section class="hero">
+        <canvas id="painel" aria-hidden="true"></canvas>
+        <div class="hero-text" id="hero-text">
+          <p class="eyebrow">Ateliê de macramé &middot; algodão cru</p>
+          <h1>Tudo é quatro nós.<br />O resto é repetição.</h1>
+          <p class="lead">
+            Painéis, divisórias e cortinas feitos à mão em São Paulo. Você manda
+            a medida da parede, a gente manda a peça pronta para pendurar.
+          </p>
+          <a class="cta" href="#encomenda">Pedir um orçamento</a>
+        </div>
       </section>
 
-      <section class="step" data-step="molde">
-        <p class="stage-label">Chapa 2 &mdash; o molde</p>
-        <h2>A mesma curva levanta o molde.</h2>
-        <p class="lead">
-          O moldador recorta a curva numa tábua e a faz girar contra o barro. A
-          tábua raspa o negativo do sino: primeiro o macho, o miolo por onde o
-          badalo vai passar, depois a capa por fora. O bronze entra no vazio
-          entre os dois.
-        </p>
+      <canvas class="divider" aria-hidden="true"></canvas>
+
+      <section class="knots" id="nos">
+        <div class="section-head">
+          <h2>Os quatro nós</h2>
+          <p class="lead">
+            Não existe um quinto. Todo painel que você já viu é combinação
+            destes, mudando só a ordem, a tensão e onde a trama abre.
+          </p>
+        </div>
+
+        <ul class="knot-grid">
+          <li class="knot">
+            <canvas data-knot="larksHead" aria-hidden="true"></canvas>
+            <h3>Cabeça de cotovia</h3>
+            <p>
+              Dobra a corda ao meio, passa a alça por trás do bastão e puxa as
+              duas pontas por dentro dela. É o nó que monta a peça no bastão —
+              toda fileira de cima é feita dele.
+            </p>
+          </li>
+
+          <li class="knot">
+            <canvas data-knot="squareKnot" aria-hidden="true"></canvas>
+            <h3>Nó quadrado</h3>
+            <p>
+              Quatro cordas: as duas de fora trabalham, as duas do meio ficam
+              paradas e servem de recheio. Alternando o lado que passa por cima,
+              o nó fica reto e a coluna desce sem torcer.
+            </p>
+          </li>
+
+          <li class="knot">
+            <canvas data-knot="spiral" aria-hidden="true"></canvas>
+            <h3>Meio nó</h3>
+            <p>
+              O quadrado pela metade, sempre para o mesmo lado. Repetido, ele
+              não tem como ficar reto: a coluna gira sozinha e vira espiral. Uma
+              volta completa a cada seis nós, mais ou menos.
+            </p>
+          </li>
+
+          <li class="knot">
+            <canvas data-knot="hitch" aria-hidden="true"></canvas>
+            <h3>Festonê</h3>
+            <p>
+              Cada corda dá duas voltas em uma corda-guia. Como a guia é que
+              manda na direção, inclinar ela desenha diagonais — é assim que
+              aparecem os losangos e os vês nas peças grandes.
+            </p>
+          </li>
+        </ul>
       </section>
 
-      <section class="step" data-step="fusao">
-        <p class="stage-label">Chapa 3 &mdash; a fusão</p>
-        <h2>Setenta e oito por vinte e dois.</h2>
-        <p class="lead">
-          Cobre e estanho, a 1&nbsp;150&nbsp;°C. Mais estanho e o sino ganha
-          brilho mas racha; menos e ele soa surdo. A liga não é uma escolha de
-          gosto: é a fronteira estreita em que o metal aceita vibrar por muito
-          tempo sem se partir.
-        </p>
+      <canvas class="divider" aria-hidden="true"></canvas>
+
+      <section class="pieces" id="pecas">
+        <div class="section-head">
+          <h2>Peças</h2>
+          <p class="lead">
+            Cada uma foi feita para uma parede específica. As medidas são as que
+            saíram do ateliê.
+          </p>
+        </div>
+
+        <ul class="piece-list">
+          <li class="piece">
+            <canvas class="swatch" data-rows="6" data-open="3" data-arc="0" aria-hidden="true"></canvas>
+            <h3>Talhado</h3>
+            <p>
+              Divisória para um loft sem parede entre a sala e o quarto. Trama
+              fechada em cima, aberta embaixo, para deixar a luz passar no chão.
+            </p>
+            <dl class="spec">
+              <div><dt>Medida</dt><dd>240 × 180 cm</dd></div>
+              <div><dt>Corda</dt><dd>algodão cru 5 mm, torcido</dd></div>
+              <div><dt>Consumo</dt><dd>2,4 km</dd></div>
+              <div><dt>Nós</dt><dd>quadrado, festonê</dd></div>
+              <div><dt>Bastão</dt><dd>eucalipto, 200 cm</dd></div>
+              <div><dt>Ateliê</dt><dd>9 semanas</dd></div>
+            </dl>
+          </li>
+
+          <li class="piece">
+            <canvas class="swatch" data-rows="5" data-open="5" data-arc="34" aria-hidden="true"></canvas>
+            <h3>Meia-lua</h3>
+            <p>
+              Painel de cabeceira. O arco não é cortado depois: sai da diferença
+              de comprimento das cordas, calculada na montagem.
+            </p>
+            <dl class="spec">
+              <div><dt>Medida</dt><dd>120 × 90 cm</dd></div>
+              <div><dt>Corda</dt><dd>algodão cru 3 mm, torcido</dd></div>
+              <div><dt>Consumo</dt><dd>680 m</dd></div>
+              <div><dt>Nós</dt><dd>quadrado, meio nó</dd></div>
+              <div><dt>Bastão</dt><dd>freijó, 130 cm</dd></div>
+              <div><dt>Ateliê</dt><dd>3 semanas</dd></div>
+            </dl>
+          </li>
+
+          <li class="piece">
+            <canvas class="swatch" data-rows="2" data-open="1" data-arc="0" aria-hidden="true"></canvas>
+            <h3>Fio d'água</h3>
+            <p>
+              Cortina para uma janela de esquina. Só franja e festonê: de longe
+              lê como chuva, de perto dá para ver cada volta na guia.
+            </p>
+            <dl class="spec">
+              <div><dt>Medida</dt><dd>260 × 140 cm</dd></div>
+              <div><dt>Corda</dt><dd>algodão cru 4 mm, torcido</dd></div>
+              <div><dt>Consumo</dt><dd>1,6 km</dd></div>
+              <div><dt>Nós</dt><dd>festonê, cabeça de cotovia</dd></div>
+              <div><dt>Bastão</dt><dd>bambu, 150 cm</dd></div>
+              <div><dt>Ateliê</dt><dd>5 semanas</dd></div>
+            </dl>
+          </li>
+        </ul>
       </section>
 
-      <section class="step" data-step="afinacao">
-        <p class="stage-label">Chapa 4 &mdash; a afinação</p>
-        <h2>Cinco notas no mesmo corpo.</h2>
-        <p class="lead">
-          O sino sai do molde desafinado. No torno vertical, o afinador tira
-          metal por dentro &mdash; e cada altura governa um parcial diferente.
-          Os anéis acendem na ordem em que o corte é feito: o nominal no
-          cordão, subindo até o hum, no ombro.
-        </p>
+      <canvas class="divider" aria-hidden="true"></canvas>
+
+      <section class="material" id="algodao">
+        <div class="section-head">
+          <h2>Por que algodão cru</h2>
+        </div>
+        <div class="material-body">
+          <p>
+            O ateliê trabalha só com algodão torcido de três fios, sem tingimento.
+            Torcido e não trançado por um motivo prático: o trançado é mais
+            bonito na bobina, mas não desfia. Passou a escova, ele embola. O
+            torcido abre nos três fios e vira franja de verdade.
+          </p>
+          <p>
+            Cru porque o algodão amarela devagar com a luz, e amarelar junto é
+            melhor do que desbotar em manchas. Uma peça de cinco anos fica com o
+            tom de linho velho — o que a maioria das pessoas queria desde o
+            começo.
+          </p>
+          <p class="rule-of-thumb">
+            <span>Regra do ateliê</span>
+            Cada corda sai com <strong>quatro vezes</strong> o comprimento final
+            da peça. Um painel de 1,80&nbsp;m pede corda de 7,20&nbsp;m. Quem
+            corta justo, refaz.
+          </p>
+        </div>
       </section>
 
-      <section class="step" data-step="toque">
-        <p class="stage-label">Chapa 5 &mdash; o toque</p>
-        <h2>A nota que você ouve não está no sino.</h2>
+      <canvas class="divider" aria-hidden="true"></canvas>
+
+      <section class="order" id="encomenda">
+        <h2>Encomendar</h2>
         <p class="lead">
-          Nenhum dos cinco parciais é a nota do sino. O ouvido recebe os cinco
-          juntos e constrói um sexto som, uma oitava abaixo do nominal, que
-          nenhum microfone encontra no metal. O fundidor passa meses afinando
-          uma nota que só existe em quem escuta.
+          Manda a largura e a altura da parede, uma foto do espaço e a data que
+          você precisa. A resposta sai com desenho, prazo e valor fechado —
+          normalmente em três dias úteis.
+        </p>
+        <p class="order-contact">
+          <a class="cta" href="mailto:atelie@nocru.example">atelie@nocru.example</a>
+          <span>São Paulo &middot; envio para todo o Brasil</span>
         </p>
       </section>
     </main>
 
     <footer class="colophon">
       <p>
-        Perfil, molde e peça saem de <code>src/profile.js</code>. Three.js
-        revoluciona a curva, o GSAP conduz o scroll.
+        Os nós e o painel do topo são desenhados em canvas, a partir do mesmo
+        algoritmo de nó quadrado alternado.
       </p>
     </footer>
 

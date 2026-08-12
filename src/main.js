@@ -1,126 +1,135 @@
-import "@fontsource/cinzel/500.css";
-import "@fontsource/cinzel/600.css";
-import "@fontsource/archivo/400.css";
-import "@fontsource/ibm-plex-mono/400.css";
+import "@fontsource-variable/fraunces/full.css";
+import "@fontsource-variable/karla";
 import "./styles.css";
 
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { createWorld } from "./world.js";
-import { createDrawing } from "./drawing.js";
-import { PARTIALS } from "./profile.js";
+import { drawPanel } from "./panel.js";
+import { drawDivider } from "./divider.js";
+import { KNOTS } from "./knots.js";
+import { drawSwatch } from "./swatch.js";
 
 gsap.registerPlugin(ScrollTrigger);
 
-const world = createWorld(document.querySelector("#stage"));
-const drawing = createDrawing(document.querySelector("#plate"), world);
-
-// Um único loop de frame: o Three.js renderiza dentro do ticker do GSAP.
-gsap.ticker.add(world.render);
-gsap.ticker.lagSmoothing(0);
-
 const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-let introPlayed = false;
+// A paleta da corda sai das mesmas custom properties do CSS: um só lugar
+// define a cor, e o canvas e a folha de estilo leem dali.
+const css = getComputedStyle(document.documentElement);
+const token = (name) => css.getPropertyValue(name).trim();
 
-function relayout() {
-  world.resize();
-  drawing.layout();
-  if (introPlayed || reduceMotion) {
-    gsap.set("#plate .curve", { strokeDashoffset: 0 });
-  }
-  ScrollTrigger.refresh();
+const palette = {
+  body: token("--corda"),
+  light: token("--corda-luz"),
+  shadow: token("--corda-sombra"),
+  wood: token("--madeira"),
+  woodGrain: token("--madeira-veio"),
+};
+
+const panel = document.querySelector("#painel");
+const heroText = document.querySelector("#hero-text");
+
+/**
+ * O vão entre as duas peças, medido no texto que vive nele. Em tela estreita
+ * não há vão: a peça fica inteira, com o texto abaixo dela.
+ */
+function gap() {
+  if (window.innerWidth < 760) return null;
+  const a = panel.getBoundingClientRect();
+  const b = heroText.getBoundingClientRect();
+  const pad = 34;
+  return { x1: b.left - a.left - pad, x2: b.right - a.left + pad };
 }
 
-relayout();
-window.addEventListener("resize", relayout);
+const state = { reveal: reduceMotion ? 1 : 0 };
 
-// A curva se desenha na chegada: é a tese da página, então ela abre sozinha.
-if (reduceMotion) {
-  gsap.set("#plate .curve", { strokeDashoffset: 0 });
-  introPlayed = true;
-} else {
-  gsap.to("#plate .curve", {
-    strokeDashoffset: 0,
-    duration: 1.8,
-    ease: "power2.inOut",
-    delay: 0.25,
-    onComplete: () => {
-      introPlayed = true;
-    },
-  });
+function paintPanel(detail = true) {
+  drawPanel(panel, { gap: gap(), palette, reveal: state.reveal, detail });
 }
 
-// O sino gira devagar ao longo de toda a página — uma peça de revolução vista
-// por todos os lados.
-gsap.to(world.bell.rotation, {
-  y: Math.PI * 1.6,
-  ease: "none",
-  scrollTrigger: {
-    trigger: "main",
-    start: "top top",
-    end: "bottom bottom",
-    scrub: reduceMotion ? true : 0.8,
-  },
-});
+paintPanel();
 
-// O momento único: na fusão, o metal líquido acende por baixo e esfria.
-// `emissive` é um THREE.Color, então os canais são animados um a um — passar
-// um hex aqui substituiria o objeto por um número e apagaria o material.
-const emissive = world.shell.material.emissive;
+// --- A peça se amarra ------------------------------------------------------
+// O único momento orquestrado da página: o bastão desce, as cordas caem dele e
+// os nós vão se dando de cima para baixo. Tudo o mais fica quieto.
+if (!reduceMotion) {
+  const tie = gsap.timeline({ delay: 0.15 });
 
-gsap
-  .timeline({
-    scrollTrigger: {
-      trigger: '[data-step="fusao"]',
-      start: "top bottom",
-      end: "bottom top",
-      scrub: 1,
+  tie.from(panel, { yPercent: -4, opacity: 0, duration: 0.7, ease: "power2.out" });
+  tie.to(
+    state,
+    {
+      reveal: 1,
+      duration: 2.1,
+      ease: "power2.inOut",
+      onUpdate: () => paintPanel(false),
+      onComplete: () => paintPanel(true),
     },
-  })
-  .to(world.forge, { intensity: 22, ease: "power2.in" }, 0)
-  .to(emissive, { r: 0.34, g: 0.11, b: 0.02, ease: "power2.in" }, 0)
-  .to(world.forge, { intensity: 0, ease: "power2.out" }, ">")
-  .to(emissive, { r: 0, g: 0, b: 0, ease: "power2.out" }, "<");
+    0.1,
+  );
 
-// Na afinação, os cinco parciais acendem na ordem em que o afinador os corta:
-// de baixo (nominal, no cordão) para cima (hum, no ombro).
-const order = [...PARTIALS].map((p) => p.name);
+  // O texto entra depois que a trama passa por ele, não antes.
+  tie.from(
+    heroText.children,
+    { y: 26, opacity: 0, duration: 0.8, stagger: 0.09, ease: "power3.out" },
+    0.9,
+  );
+}
 
-ScrollTrigger.create({
-  trigger: '[data-step="afinacao"]',
-  start: "top 65%",
-  end: "bottom 35%",
-  scrub: true,
-  onUpdate: (self) => {
-    const lit = Math.floor(self.progress * (order.length + 0.4));
-    drawing.marks.forEach(({ partial, group }) => {
-      const live = order.indexOf(partial.name) < lit;
-      group.classList.toggle("is-live", live);
-      // O anel correspondente acende na peça: a guia e o corte são o mesmo
-      // ponto, um na chapa e outro no bronze.
-      const ring = world.rings.find((r) => r.userData.partial === partial.name);
-      if (ring) gsap.to(ring.material, { opacity: live ? 0.85 : 0.12, duration: 0.35 });
-    });
-  },
-  onLeaveBack: () => {
-    drawing.marks.forEach(({ group }) => group.classList.remove("is-live"));
-    world.rings.forEach((r) => gsap.to(r.material, { opacity: 0.12, duration: 0.35 }));
-  },
-});
+// --- As transições entre seções -------------------------------------------
+document.querySelectorAll(".divider").forEach((canvas) => {
+  const st = { progress: reduceMotion ? 1 : 0 };
+  const paint = () => drawDivider(canvas, { palette, progress: st.progress });
+  paint();
 
-// Entrada de cada passo. Curta e igual para todos — o protagonismo é da chapa.
-gsap.utils.toArray(".step").forEach((step) => {
-  gsap.from(step.children, {
-    y: 18,
-    opacity: 0,
-    duration: 0.6,
-    stagger: 0.08,
-    ease: "power2.out",
+  if (reduceMotion) return;
+  gsap.to(st, {
+    progress: 1,
+    ease: "none",
+    onUpdate: paint,
     scrollTrigger: {
-      trigger: step,
-      start: "top 72%",
-      toggleActions: "play none none reverse",
+      trigger: canvas,
+      start: "top 92%",
+      end: "bottom 55%",
+      scrub: 0.6,
     },
   });
+});
+
+// --- Os quatro nós ---------------------------------------------------------
+const knotCanvases = [...document.querySelectorAll("[data-knot]")];
+const paintKnots = () =>
+  knotCanvases.forEach((c) => KNOTS[c.dataset.knot]?.(c, palette));
+paintKnots();
+
+// --- As amostras das peças -------------------------------------------------
+const swatches = [...document.querySelectorAll(".swatch")];
+const paintSwatches = () =>
+  swatches.forEach((c) =>
+    drawSwatch(c, {
+      palette,
+      rows: Number(c.dataset.rows),
+      openFrom: Number(c.dataset.open),
+      arc: Number(c.dataset.arc),
+    }),
+  );
+paintSwatches();
+
+// Não há entrada de seção nem fade em card: o único movimento desta página é
+// nó sendo dado — no topo e nas transições. Qualquer outra animação diluiria
+// os dois momentos que importam.
+
+// --- Redesenho ------------------------------------------------------------
+let resizeTimer;
+window.addEventListener("resize", () => {
+  clearTimeout(resizeTimer);
+  resizeTimer = setTimeout(() => {
+    paintPanel();
+    paintKnots();
+    paintSwatches();
+    document
+      .querySelectorAll(".divider")
+      .forEach((c) => drawDivider(c, { palette, progress: 1 }));
+    ScrollTrigger.refresh();
+  }, 120);
 });
